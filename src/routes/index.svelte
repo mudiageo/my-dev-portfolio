@@ -1,5 +1,5 @@
 <script context="module">
-
+    import ProjectCard from '$lib/components/ProjectCard.svelte'
     import { client } from '$lib/graphql-client'
     import { gql } from 'graphql-request'
 
@@ -38,17 +38,7 @@
 <h1>Recent Projects by Me</h1>
 
 <div>
-  {#each projects as { name, slug, description, image }}
-    <div>
-      <img src={image[0].url} alt={name} />
-      <a href={`/projects/${slug}`}>
-        <div>
-          <h2>{name}</h2>
-          <p>
-            {description.slice(0, 80)}...
-          </p>
-        </div>
-      </a>
-    </div>
+  {#each projects as project}
+    <ProjectCard {project}/>
   {/each}
 </div>
