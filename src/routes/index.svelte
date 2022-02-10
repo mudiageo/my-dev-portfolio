@@ -1,7 +1,6 @@
 <script context="module">
     import ProjectCard from '$lib/components/ProjectCard.svelte'
     import { client } from '$lib/graphql-client'
-    import { gql } from 'graphql-request'
     import { authorsQuery, projectsQuery } from '$lib/graphql-queries'
     export const load = async () => {
    
