@@ -14,9 +14,8 @@ export const authorsQuery = gql`
   }
 `
 
-export const projectsQuery = gql`
-  query GetProjects {
-    projects {
+const PROJECT_FRAGMENT = gql`
+  fragment ProjectDetails on Project {
       name
       slug
       description
@@ -26,6 +25,19 @@ export const projectsQuery = gql`
       image {
         url
       }
+    
+  }`
+  export const projectsQuery = gql`
+  query GetProjects {
+    projects {
+        ...ProjectDetails
     }
   }
+`
+export const projectQuery = gql`
+query GetProject($slug: String) {
+  project(where: { slug: $slug}) {
+      ...ProjectDetails
+  }
+}
 `
