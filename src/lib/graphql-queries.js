@@ -28,13 +28,15 @@ const PROJECT_FRAGMENT = gql`
     
   }`
   export const projectsQuery = gql`
-  query GetProjects {
+    ${PROJECT_FRAGMENT}
+ query GetProjects {
     projects {
         ...ProjectDetails
     }
   }
 `
 export const projectQuery = gql`
+  ${PROJECT_FRAGMENT}
 query GetProject($slug: String) {
   project(where: { slug: $slug}) {
       ...ProjectDetails
@@ -42,7 +44,7 @@ query GetProject($slug: String) {
 }
 `
 const POST_FRAGMENT = gql`
-  fragment PostDetails on Post {
+fragment PostDetails on Post {
     title
     slug
     date

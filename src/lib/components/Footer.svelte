@@ -8,9 +8,9 @@
     class="p-10 footer bg-primary text-primary-content footer-center"
   >
     <div class="grid grid-flow-col gap-4">
-      <a class="link link-hover" href="/projects">Portfolio</a>
-      <a class="link link-hover" href="/posts">Blog</a>
-      <a class="link link-hover" href="/about">About</a>
+      <a class="link link-hover" sveltekit:prefetch href="/projects">Portfolio</a>
+      <a class="link link-hover" sveltekit:prefetch href="/posts">Blog</a>
+      <a class="link link-hover" sveltekit:prefetch href="/about">About</a>
     </div>
     <div>
       <div class="grid grid-flow-col gap-4">

@@ -5,11 +5,11 @@
     export const load = async () => {
    
     
-    const [authorReq, projectsReq] = await Promise.all([
+    const [authorsReq, projectsReq] = await Promise.all([
       client.request(authorsQuery),
       client.request(projectsQuery),
     ])
-    const { authors } = authorReq
+    const { authors } = authorsReq
     const { projects } = projectsReq
 
     return {
@@ -26,11 +26,15 @@
     export let authors
   </script>
   <svelte:head>
-    <title>My Portfolio project</title>
+    <title>Mudiaga Arharhire || Developer Portfolio and Blog</title>
   </svelte:head>
 <h1 class="font-bold text-center mb-20 text-5xl">
-    Welcome to my Portfolio
-  </h1>
+    Welcome to My World
+</h1>
+<div class="grid gap-10 md:grid-cols-4 md:px-10 lg:grid-cols-6 lg:-mx-52">
+  <div class="lg:"></div>
+  <div class="lg:"></div>
+</div>
   
   {#each authors as { name, intro, picture: { url } }}
     <div class="flex mb-40 items-end">
