@@ -10,10 +10,16 @@
   })
 })
 </script>
-<nav class="mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
-  <div class="max-w-6xl mx-auto px-4">
-      <div class="flex justify-between">
-          <div class="flex space-x-7">
+<nav class="flex flex-wrap
+items-center
+justify-between
+w-full
+py-4
+md:py-0
+px-4
+text-lgmb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
+
+          <div>
               <!--Website Logo-->
               <a sveltekit:prefetch href="/" class="flex items-center py-4 px-2">
               <img src="favicon.png" alt="Logo" class="h-8 w-8 mr-2">
@@ -96,41 +102,4 @@ Blog
 </div>
 </div>
 </nav>
-  <!-- <div class="flex-1 px-2 mx-2">
-    <a class="text-lg font-bold" class:active={$page.url.pathname === '/'} sveltekit:prefetch href="/">Portfolio and Blog</a>
-  </div>
-
-  <div class="dropdown dropdown-left lg:hidden">
-    <div tabindex="0" class="m-1 btn">Links</div>
-    <ul
-      tabindex="0"
-      class="bg-neutral rounded-box shadow text-neutral-content p-2 w-52 menu dropdown-content "
-    >
-      <a class:active={$page.url.pathname === '/projects'} sveltekit:prefetch href="/projects" class="btn btn-ghost btn-sm rounded-btn">
-        Portfolio
-      </a>
-      <a class="btn btn-ghost btn-sm rounded-btn" class:active={$page.url.pathname === '/posts'} sveltekit:prefetch  href="/posts">
-        Blog
-      </a>
-      <a class="btn btn-ghost btn-sm rounded-btn" class:active={$page.url.pathname === '/about'} sveltekit:prefetch href="/about">
-        About
-      </a>
-      <div class="px-4">
-        <ThemeSelect />
-      </div>
-    </ul>
-  </div>
-
-  <div class="flex-none hidden px-2 mx-2 lg:flex">
-    <div class="flex items-stretch">
-      <a class="btn btn-ghost btn-sm rounded-btn" class:active={$page.url.pathname === '/projects'} sveltekit:prefetch href="/projects">
-        Portfolio
-      </a>
-      <a class="btn btn-ghost btn-sm rounded-btn" class:active={$page.url.pathname === '/posts'} sveltekit:prefetch href="/posts"
-        >Blog</a
-      >
-      <a class="btn btn-ghost btn-sm rounded-btn" class:active={$page.url.pathname === '/about'} sveltekit:prefetch href="/about"
-        >About</a
-      >
-    </div>
-  </div> -->
+  
