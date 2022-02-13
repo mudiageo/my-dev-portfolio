@@ -29,13 +29,7 @@
   <div
     class="grid gap-10 md:grid-cols-4 md:px-10 lg:grid-cols-6 lg:-mx-52"
   >
-    {#each projects as { name, slug, description, image }, index}
-      <ProjectCard
-        {name}
-        {description}
-        url={image[0].url}
-        {index}
-        {slug}
-      />
+    {#each projects as project}
+      <ProjectCard {project}/>
     {/each}
   </div>

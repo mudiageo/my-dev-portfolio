@@ -3,9 +3,9 @@
   import {onMount} from 'svelte'
   import ThemeSelect from './ThemeSelect.svelte'
   onMount(() => {
-  const menuBtn = document.querySelector('button.menu-button');
-  const navMenu = document.querySelector('.mobile-menu');
-  menuBtn.addEventListener('click', () => {
+  const menuBtn = document.querySelector('#menu-button');
+  const navMenu = document.querySelector('#menu');
+  $: menuBtn.addEventListener('click', () => {
     navMenu.classList.toggle('hidden');
   })
 })
