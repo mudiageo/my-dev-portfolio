@@ -32,7 +32,7 @@
     Welcome to My World
 </h1>
 <div class="grid gap-10 md:grid-cols-4 md:px-10 lg:grid-cols-6 lg:-mx-52">
-  <div class="lg:">lkjbk</div>
+  <div class="lg:"></div>
   <div class="lg:"></div>
 </div>
   
