@@ -48,7 +48,7 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
   
    <div class="hidden w-full md:flex md:items-center md:w-auto" id="menu">
        <ul class=" pt-4
-       text-base 
+       text-base transition duration-500
        md:flex
        md:justify-between 
        md:pt-0">
