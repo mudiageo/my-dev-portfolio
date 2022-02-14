@@ -1,9 +1,8 @@
-import { CACHE_NAME } from './constants';
 
 export default (event: FetchEvent): void => {
    const request = event.request;
    const requestURL = new URL(request.url);
- if (/(posts\.json)/.test(requestURL.pathname)) {
+ if (/(posts)/.test(requestURL.pathname)) {
      const returnOfflinePosts = () => {
        return fetch(event.request).catch(() => {
          return caches
