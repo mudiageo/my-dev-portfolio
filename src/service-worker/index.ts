@@ -16,3 +16,28 @@ self.addEventListener('install', installEvent);
  * Intercepts requests made by the page so we can decide what to do with each one.
  */
 self.addEventListener('fetch', fetchEvent);
+
+// Removes old caches
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    clients.claim(),
+    caches
+      .keys()
+      .then((keys) => {
+        return Promise.all(
+          keys
+            .filter(
+              (key) =>
+                key !== applicationCache &&
+                key !== staticCache &&
+                key !== "postsCache" &&
+                key !== "ssrCache"
+            )
+            .map((key) => caches.delete(key))
+        );
+      })
+      .then(self.skipWaiting())
+      .then(() => console.log("activated"))
+  );
+});
+
