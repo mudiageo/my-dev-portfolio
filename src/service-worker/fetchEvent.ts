@@ -1,47 +1,42 @@
 import { CACHE_NAME } from './constants';
 
 export default (event: FetchEvent): void => {
-   event.respondWith(
-      caches.match(event.request).then((cacheResponse) => {
-
-         if (cacheResponse) {
-            console.info(`fetching from cache: ${event.request.url}`);
-
-            return cacheResponse;
-         }
-
-         console.info(`trying to fetch from server: ${event.request.url}`);
-
-         return fetch(event.request)
-            .then(async (fetchResponse): Promise<Response | undefined> => {
-               if (
-                  event.request.url.indexOf('http') !== -1
-               ) {
-                  const cache = await caches.open(CACHE_NAME);
-
-                  try {
-                     // filter what to add to the cache
-                     if (
-                        fetchResponse.status !== 206
-                     ) {
-                        cache.put(event.request.url, fetchResponse.clone());
-                     }
-
-                  } catch (error) {
-                     console.error(error);
-                  }
-
-                  return fetchResponse;
-               }
-
-               // eslint-disable-next-line consistent-return
-               return undefined;
-            })
-            .catch(((error) => {
-               console.error(`"${error}: ${event.request.url}`);
-
-               return error;
-            }));
-      }),
-   );
+   const request = event.request;
+   const requestURL = new URL(request.url);
+ if (/(posts\.json)/.test(requestURL.pathname)) {
+     const returnOfflinePosts = () => {
+       return fetch(event.request).catch(() => {
+         return caches
+           .open("postsCache")
+           .then((cache) => {
+             return cache.keys().then((cacheKeys) => {
+               return Promise.all(
+                 cacheKeys.map((cacheKey) => cache.match(cacheKey))
+               );
+             });
+           })
+           .then((cachesResponses) => {
+             return Promise.all(
+               cachesResponses.map((response) => response.json())
+             );
+           })
+           .then((posts) => {
+             const response = new Response(JSON.stringify(posts), {
+               statusText: "offline",
+             });
+             return response;
+           });
+       });
+     };
+ event.respondWith(returnOfflinePosts());
+  } else if ( /(\/posts\/)(\w+-?)*/.test(requestURL.pathname) && !/(.css)|(.js)$/.test(requestURL.pathname)) {
+     const findOfflinePost = () =>
+       caches
+         .match(request)
+         .then((response) => (response ? response : fetch(request)))
+         .catch(() => returnSSRpage("/posts/offline"));
+ event.respondWith(findOfflinePost());
+  } else
+     event.respondWith(caches.match(request).then((cacheRes) => cacheRes || fetch(request)));
+ 
 };
