@@ -16,9 +16,6 @@ export default (event: ExtendableEvent): void => {
       caches.open(applicationCache).then((cache) => cache.addAll(build)),
       caches.open(staticCache).then((cache) => cache.addAll(files)),
     ])
-      .then(
-        self.skipWaiting()
-        console.log('ssrcsched')
-        )
+      .then(self.skipWaiting())
    );
 };
