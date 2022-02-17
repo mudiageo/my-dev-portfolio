@@ -1,6 +1,5 @@
 /* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/naming-convention */
-console.log('installing service worker');
 
 import fetchEvent from './fetchEvent';
 import installEvent from './installEvent';
