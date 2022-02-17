@@ -1,6 +1,7 @@
 
 export default (event: FetchEvent): void => {
    const request = event.request;
+   console.log(request)
    const requestURL = new URL(request.url);
  if (/(posts)/.test(requestURL.pathname)) {
      const returnOfflinePosts = () => {
