@@ -5,8 +5,9 @@ export default (event: FetchEvent): void => {
    const requestURL = new URL(request.url);
 
    // We will cache all POST requests, but in the real world, you will probably filter for
-	// specific URLs like if(... || event.request.url.href.match(...))
-	if(event.request.method === "POST"){
+	// specific URLs like if(... || event.request.url.href.match(`https://api-eu-west-2.graphcms.com/v2/ckzehv4xm2yp701z534u201vt/master
+``))
+	if(event.request.url.href.match()){
 		
 		// Init the cache. We use Dexie here to simplify the code. You can use any other
 		// way to access IndexedDB of course.
@@ -30,7 +31,8 @@ export default (event: FetchEvent): void => {
 			})
 		);
 	}
- 
+ 	else {
+
 
  if (/(posts)/.test(requestURL.pathname)) {
      const returnOfflinePosts = () => {
@@ -69,6 +71,8 @@ export default (event: FetchEvent): void => {
   {
      event.respondWith(caches.match(request).then((cacheRes) => cacheRes || fetch(request)));
  }
+
+}
 };
 /**
  * Serializes a Request into a plain JS object.
