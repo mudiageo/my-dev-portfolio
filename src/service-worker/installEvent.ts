@@ -12,7 +12,7 @@ export default (event: ExtendableEvent): void => {
       Promise.all([
       caches
         .open("ssrCache")
-        .then((cache) => cache.addAll(["/", "/posts", "posts/*", "/projects", "projects/*", "/posts/offline"])),
+        .then((cache) => cache.addAll(["/", "/posts", "/posts/*", "/projects", "/projects/*", "/posts/offline"])),
       caches.open(applicationCache).then((cache) => cache.addAll(build)),
       caches.open(staticCache).then((cache) => cache.addAll(files)),
     ])
