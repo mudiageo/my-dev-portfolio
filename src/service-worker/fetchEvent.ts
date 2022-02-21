@@ -5,8 +5,7 @@ export default (event: FetchEvent): void => {
    const requestURL = new URL(request.url);
 
    // We will cache all POST requests, but in the real world, you will probably filter for
-	// specific URLs like if(... || event.request.url.href.match(`https://api-eu-west-2.graphcms.com/v2/ckzehv4xm2yp701z534u201vt/master
-``))
+	// specific URLs like if(... || event.request.url.href.match(`https://api-eu-west-2.graphcms.com/v2/ckzehv4xm2yp701z534u201vt/master`))
 	if(event.request.url.href.match()){
 		
 		// Init the cache. We use Dexie here to simplify the code. You can use any other
