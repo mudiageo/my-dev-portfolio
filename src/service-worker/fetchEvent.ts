@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-export default (event: FetchEvent): void => {
+export default async (event: FetchEvent): void => {
    const request = event.request;
    console.log(request)
    const requestURL = new URL(request.url);
@@ -10,26 +10,8 @@ export default (event: FetchEvent): void => {
 		
 		// Init the cache. We use Dexie here to simplify the code. You can use any other
 		// way to access IndexedDB of course.
-		var db = new Dexie("post_cache");
-		db.version(1).stores({
-			post_cache: 'key,response,timestamp'
-		})
-	
-		event.respondWith(
-			// First try to fetch the request from the server
-			fetch(event.request.clone())
-			.then(function(response) {
-				// If it works, put the response into IndexedDB
-				cachePut(event.request.clone(), response.clone(), db.post_cache);
-				return response;
-			})
-			.catch(function() {
-				// If it does not work, return the cached response. If the cache does not
-				// contain a response for our request, it will give us a 503-response
-				return cacheMatch(event.request.clone(), db.post_cache);
-			})
-		);
-	}
+		event.respondWith(staleWhileRevalidate(event)); 
+			}
  	else {
 
 
@@ -73,131 +55,138 @@ export default (event: FetchEvent): void => {
 
 }
 };
-/**
- * Serializes a Request into a plain JS object.
- * 
- * @param request
- * @returns Promise
- */ 
-function serializeRequest(request) {
-	  var serialized = {
-		url: request.url,
-		headers: serializeHeaders(request.headers),
-		method: request.method,
-		mode: request.mode,
-		credentials: request.credentials,
-		cache: request.cache,
-		redirect: request.redirect,
-		referrer: request.referrer
-	  };
-	
-	  // Only if method is not `GET` or `HEAD` is the request allowed to have body.
-	  if (request.method !== 'GET' && request.method !== 'HEAD') {
-		return request.clone().text().then(function(body) {
-		  serialized.body = body;
-		  return Promise.resolve(serialized);
-		});
-	  }
-	  return Promise.resolve(serialized);
-}
+async function staleWhileRevalidate(event) { 
+
+	let promise = null; 
  
-/**
- * Serializes a Response into a plain JS object
- * 
- * @param response
- * @returns Promise
- */ 
-function serializeResponse(response) {
-	  var serialized = {
-		headers: serializeHeaders(response.headers),
-		status: response.status,
-		statusText: response.statusText
-	  };
-	
-	  return response.clone().text().then(function(body) {
-		  serialized.body = body;
-		  return Promise.resolve(serialized);
-	  });
-}
+	let cachedResponse = await getCache(event.request.clone()); 
  
-/**
- * Serializes headers into a plain JS object
- * 
- * @param headers
- * @returns object
- */ 
-function serializeHeaders(headers) {
-	var serialized = {};
-	// `for(... of ...)` is ES6 notation but current browsers supporting SW, support this
-	// notation as well and this is the only way of retrieving all the headers.
-	for (var entry of headers.entries()) {
-		serialized[entry[0]] = entry[1];
-	}
-	return serialized;
-}
+	let fetchPromise = fetch(event.request.clone()) 
  
-/**
- * Creates a Response from it's serialized version
- * 
- * @param data
- * @returns Promise
- */ 
-function deserializeResponse(data) {
-	return Promise.resolve(new Response(data.body, data));
-}
+	  .then((response) => { 
  
-/**
- * Saves the response for the given request eventually overriding the previous version
- * 
- * @param data
- * @returns Promise
- */
-function cachePut(request, response, store) {
-	var key, data;
-	getPostId(request.clone())
-	.then(function(id){
-		key = id;
-		return serializeResponse(response.clone());
-	}).then(function(serializedResponse) {
-		data = serializedResponse;
-		var entry = {
-			key: key,
-			response: data,
-			timestamp: Date.now()
-		};
-		store
-		.add(entry)
-		.catch(function(error){
-			store.update(entry.key, entry);
-		});
-	});
-}
-	
-/**
- * Returns the cached response for the given request or an empty 503-response  for a cache miss.
- * 
- * @param request
- * @return Promise
- */
-function cacheMatch(request) {
-	return getPostId(request.clone())
-	.then(function(id) {
-		return store.get(id);
-	}).then(function(data){
-		if (data) {
-			return deserializeResponse(data.response);
-		} else {
-			return new Response('', {status: 503, statusText: 'Service Unavailable'});
-		}
-	});
-}
+		setCache(event.request.clone(), response.clone()); 
  
-/**
- * Returns a string identifier for our POST request.
- * 
- * @param request
- * @return string
- */
-function getPostId(request) {
-	return JSON.stringify(serializeRequest(request.clone()));
-}
+		return response; 
+ 
+	  }) 
+ 
+	  .catch((err) => { 
+ 
+		console.error(err); 
+ 
+	  }); 
+ 
+	return cachedResponse ? Promise.resolve(cachedResponse) : fetchPromise; 
+ 
+  } 
+ 
+   
+ 
+  async function serializeResponse(response) { 
+ 
+	let serializedHeaders = {}; 
+ 
+	for (var entry of response.headers.entries()) { 
+ 
+	  serializedHeaders[entry[0]] = entry[1]; 
+ 
+	} 
+ 
+	let serialized = { 
+ 
+	  headers: serializedHeaders, 
+ 
+	  status: response.status, 
+ 
+	  statusText: response.statusText 
+ 
+	}; 
+ 
+	serialized.body = await response.json(); 
+ 
+	return serialized; 
+ 
+  } 
+ 
+   
+ 
+  async function setCache(request, response) { 
+ 
+	var key, data; 
+ 
+	let body = await request.json(); 
+ 
+	let id = CryptoJS.MD5(body.query).toString(); 
+ 
+   
+ 
+	var entry = { 
+ 
+	  query: body.query, 
+ 
+	  response: await serializeResponse(response), 
+ 
+	  timestamp: Date.now() 
+ 
+	}; 
+ 
+	idbKeyval.set(id, entry, store); 
+ 
+  } 
+ 
+   
+ 
+  async function getCache(request) { 
+ 
+	let data; 
+ 
+	try { 
+ 
+	  let body = await request.json(); 
+ 
+	  let id = CryptoJS.MD5(body.query).toString(); 
+ 
+	  data = await idbKeyval.get(id, store); 
+ 
+	  if (!data) return null; 
+ 
+   
+ 
+	  // Check cache max age. 
+ 
+	  let cacheControl = request.headers.get('Cache-Control'); 
+ 
+	  let maxAge = cacheControl ? parseInt(cacheControl.split('=')[1]) : 3600; 
+ 
+	  if (Date.now() - data.timestamp > maxAge * 1000) { 
+ 
+		console.log(`Cache expired. Load from API endpoint.`); 
+ 
+		return null; 
+ 
+	  } 
+ 
+   
+ 
+	  console.log(`Load response from cache.`); 
+ 
+	  return new Response(JSON.stringify(data.response.body), data.response); 
+ 
+	} catch (err) { 
+ 
+	  return null; 
+ 
+	} 
+ 
+  } 
+ 
+   
+ 
+  async function getPostKey(request) { 
+ 
+	let body = await request.json(); 
+ 
+	return JSON.stringify(body); 
+ 
+  }
