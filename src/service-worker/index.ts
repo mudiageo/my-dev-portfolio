@@ -6,6 +6,51 @@ import installEvent from './installEvent';
 
 // has to be var, because we need function scope
 declare var self: ServiceWorkerGlobalScope;
+var store = new idbKeyval.Store('GraphQL-Cache', 'PostResponses'); 
+ // Init indexedDB using idb-keyval, https://github.com/jakearchibald/idb-keyval 
+
+
+  
+
+ if (workbox) { 
+
+  console.log(`Yay! Workbox is loaded 🎉`); 
+
+} else { 
+
+  console.log(`Boo! Workbox didn't load 😬`); 
+
+} 
+
+ 
+
+// Workbox with custom handler to use IndexedDB for cache. 
+
+workbox.routing.registerRoute( 
+
+  new RegExp('/graphql(/)?'), 
+
+  // Uncomment below to see the error thrown from Cache Storage API. 
+
+  //workbox.strategies.staleWhileRevalidate(), 
+
+  async ({ 
+
+    event 
+
+  }) => { 
+
+    return staleWhileRevalidate(event); 
+
+  }, 
+
+  'POST' 
+
+); 
+/**
+* Intercepts requests made by the page so we can decide what to do with each one.
+*/
+
 
 /**
  * Takes care of the installation of the service worker, as well as the creation of the cache.
@@ -18,49 +63,6 @@ declare var self: ServiceWorkerGlobalScope;
 
   
 self.addEventListener('install', installEvent);
- // Init indexedDB using idb-keyval, https://github.com/jakearchibald/idb-keyval 
-
-
-  
-
- if (workbox) { 
-
-   console.log(`Yay! Workbox is loaded 🎉`); 
-
- } else { 
-
-   console.log(`Boo! Workbox didn't load 😬`); 
-
- } 
-
-  
-
- // Workbox with custom handler to use IndexedDB for cache. 
-
- workbox.routing.registerRoute( 
-
-   new RegExp('/graphql(/)?'), 
-
-   // Uncomment below to see the error thrown from Cache Storage API. 
-
-   //workbox.strategies.staleWhileRevalidate(), 
-
-   async ({ 
-
-     event 
-
-   }) => { 
-
-     return staleWhileRevalidate(event); 
-
-   }, 
-
-   'POST' 
-
- ); 
-/**
- * Intercepts requests made by the page so we can decide what to do with each one.
- */
 self.addEventListener('fetch', fetchEvent);
 
 // Removes old caches
