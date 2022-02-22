@@ -20,7 +20,6 @@ declare var self: ServiceWorkerGlobalScope;
 self.addEventListener('install', installEvent);
  // Init indexedDB using idb-keyval, https://github.com/jakearchibald/idb-keyval 
 
- const store = new idbKeyval.Store('GraphQL-Cache', 'PostResponses'); 
 
   
 

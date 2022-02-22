@@ -1,6 +1,8 @@
 import Dexie from 'dexie'
 export default async (event: FetchEvent): void => {
-   const request = event.request;
+	const store = new idbKeyval.Store('GraphQL-Cache', 'PostResponses'); 
+
+	const request = event.request;
    console.log(request)
    const requestURL = new URL(request.url);
 
