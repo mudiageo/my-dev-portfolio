@@ -94,7 +94,7 @@ self.addEventListener('fetch', async (event: FetchEvent): void => {
 
    // We will cache all POST requests, but in the real world, you will probably filter for
 	// specific URLs like if(... || event.request.url.href.match(`https://api-eu-west-2.graphcms.com/v2/ckzehv4xm2yp701z534u201vt/master`))
-	if(event.request.url.href.match(`https://api-eu-west-2.graphcms.com/v2/ckzehv4xm2yp701z534u201vt/master`)){
+	if(event.request.method === 'POST')){
 		
 		// Init the cache. We use Dexie here to simplify the code. You can use any other
 		// way to access IndexedDB of course.
