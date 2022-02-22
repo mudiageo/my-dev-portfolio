@@ -6,7 +6,8 @@ import installEvent from './installEvent';
 
 // has to be var, because we need function scope
 declare var self: ServiceWorkerGlobalScope;
-var store = new idbKeyval.Store('GraphQL-Cache', 'PostResponses'); 
+declare var store
+store = new idbKeyval.Store('GraphQL-Cache', 'PostResponses'); 
  // Init indexedDB using idb-keyval, https://github.com/jakearchibald/idb-keyval 
 
 
