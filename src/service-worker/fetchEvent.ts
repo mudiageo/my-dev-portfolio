@@ -1,4 +1,3 @@
-import Dexie from 'dexie'
 export default async (event: FetchEvent): void => {
 
 	const request = event.request;
