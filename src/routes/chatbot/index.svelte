@@ -1,4 +1,5 @@
 <script>
+/*
 import { onMount } from 'svelte';
 	import { themeChange } from 'theme-change';
 	import '../app.css';
@@ -14,9 +15,10 @@ let context = `${prompt} ${promptMessage}`
 alert(context)
 }
 
-
+*/
 	
 </script>
+<!--
 <form on:submit|preventDefault={sendMessage}>
 Personality: <textarea>{prompt}</textarea>
 {#each messages as {sender, message}}
@@ -25,4 +27,5 @@ Personality: <textarea>{prompt}</textarea>
 {/each}
 <input type="text" bind:value={newMessage}>
 <button type="submit">Submit</button>
-</form>
+</form>-->
+Index
