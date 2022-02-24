@@ -8,15 +8,29 @@ let newMessage
 let prompt 
 	onMount(async () => { })
 	
-const sendMessage = ()=> {
+const sendMessage = async () => {
 messages = [...messages, {sender:'Mudia', message: newMessage, bg: 'text-gray-700', position: 'end'}]
 let promptMessage = messages.map(item => `${item.sender}: ${item.message} Bot:`).toString().replaceAll('Bot:,', ' ')
 let context = `${prompt} ${promptMessage}`
-alert(context)
-setTimeout(() => {
-messages = [...messages, {sender:'Bot', message: newMessage, bg: '', position: 'start'}]
 
-}, 3000)
+const response = await fetch('http://api.vicgalle.net:5000/generate' {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+      },
+  body: 
+    {
+      context,
+      temperature: 1,
+      top_p: 0.9,
+      token_max_length: 30 
+  });
+  let botMessage = response.json().body.text
+
+
+messages = [...messages, {sender:'Bot', message: botMessage, bg: '', position: 'start'}]
+
+
 }
 
 
