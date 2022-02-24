@@ -24,7 +24,7 @@ const response = await fetch('http://api.vicgalle.net:5000/generate', {
       temperature: 1,
       top_p: 0.9,
       token_max_length: 30 
-  });
+  }});
   let botMessage = response.json().body.text
 
 
