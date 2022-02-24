@@ -7,7 +7,7 @@ import { onMount } from 'svelte';
 		themeChange(false);
 	});
 </script>
-<main>
-Main
+<main class="container mx-auto">
+
 <slot/>
 </main>
