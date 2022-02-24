@@ -27,7 +27,6 @@ messages = [...messages, {sender:'Bot', message: newMessage, bg: '', position: '
 Personality: <textarea bind:value={prompt}></textarea>
 
 <div class="max-w-2xl border rounded">
-        <div>
           <div class="w-full">
             <div class="relative flex items-center p-3 border-b border-gray-300">
               <img class="object-cover w-10 h-10 rounded-full"
@@ -47,7 +46,7 @@ Personality: <textarea bind:value={prompt}></textarea>
                     <span class="block">{message} </span>
                   </div>
                 </li>
-{/each}
+
 {/each}
               </ul>
 
@@ -90,7 +89,7 @@ Personality: <textarea bind:value={prompt}></textarea>
             </div>
           </div>
         </div>
-      </div>
+
 
 </form>
 
