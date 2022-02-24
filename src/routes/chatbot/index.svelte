@@ -3,7 +3,7 @@
 import { onMount } from 'svelte';
 	import { themeChange } from 'theme-change';
 	
-let message = []
+let messages = []
 let newMessage
 let prompt
 	onMount(async () => { })
