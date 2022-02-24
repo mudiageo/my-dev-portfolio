@@ -13,7 +13,7 @@ messages = [...messages, {sender:'Mudia', message: newMessage, bg: 'text-gray-70
 let promptMessage = messages.map(item => `${item.sender}: ${item.message} Bot:`).toString().replaceAll('Bot:,', ' ')
 let context = `${prompt} ${promptMessage}`
 
-const response = await fetch('http://api.vicgalle.net:5000/generate' {
+const response = await fetch('http://api.vicgalle.net:5000/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
