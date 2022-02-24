@@ -5,7 +5,7 @@ import { onMount } from 'svelte';
 	
 let messages = []
 let newMessage
-let prompt = ''
+$: let prompt = ''
 	onMount(async () => { })
 	
 const sendMessage = ()=> {
