@@ -9,12 +9,12 @@ let prompt
 	onMount(async () => { })
 	
 const sendMessage = ()=> {
-messages = [...messages, {sender:'Mudia', message: newMessage, bg: 'text-gray-700', class: 'end'}]
+messages = [...messages, {sender:'Mudia', message: newMessage, bg: 'text-gray-700', position: 'end'}]
 let promptMessage = messages.map(item => `${item.sender}: ${item.message} Bot:`).toString().replaceAll('Bot:,', ' ')
 let context = `${prompt} ${promptMessage}`
 alert(context)
 setTimeout(() => {
-messages = [...messages, {sender:'Bot', message: newMessage, bg: '', class: 'start'}]
+messages = [...messages, {sender:'Bot', message: newMessage, bg: '', position: 'start'}]
 
 }, 3000)
 }
@@ -32,17 +32,17 @@ Personality: <textarea bind:value={prompt}></textarea>
             <div class="relative flex items-center p-3 border-b border-gray-300">
               <img class="object-cover w-10 h-10 rounded-full"
                 src="https://cdn.pixabay.com/photo/2018/01/15/07/51/woman-3083383__340.jpg" alt="username" />
-              <span class="block ml-2 font-bold text-gray-600">Emma</span>
+              <span class="block ml-2 font-bold text-gray-600">Bot</span>
               <span class="absolute w-3 h-3 bg-green-600 rounded-full left-10 top-3">
               </span>
             </div>
             <div class="relative w-full p-6 overflow-y-auto h-[40rem]">
 
               <ul class="space-y-2">
-                {#each messages as {sender, message, bg, class}}
+                {#each messages as {sender, message, bg, position}}
 
 
-                <li class="flex justify-{class}">
+                <li class="flex justify-{position}">
                   <div class="relative max-w-xl px-4 py-2 {bg} rounded shadow">
                     <span class="block">{message} </span>
                   </div>
