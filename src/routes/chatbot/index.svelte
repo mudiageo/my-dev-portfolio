@@ -44,7 +44,7 @@ Personality: <textarea bind:value={prompt}></textarea>
 
                 <li class="flex justify-{position}">
                   <div class="relative max-w-xl px-4 py-2 {bg} rounded shadow">
-                    <span class="block">{message} </span>{position}
+                    <span class="block">{message+position} </span>{position}
                   </div>
                 </li>
 {/each}
