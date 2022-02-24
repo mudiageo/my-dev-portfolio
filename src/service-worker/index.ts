@@ -229,9 +229,14 @@ async function staleWhileRevalidate(event) {
 	var key, data; 
  
 	let body = await request.json(); 
- 
-	let id = CryptoJS.MD5(body.data.project.slug).toString() || CryptoJS.MD5(body.data.post.slug).toString() || CryptoJS.MD5(body.query).toString(); 
- 
+ mi
+	
+
+          let slug =  body.data.project.slug || body.data.post.slug || body.query
+
+          let id = CryptoJS.MD5(slug).toString()
+
+	 
    
  
 	var entry = { 
@@ -258,8 +263,8 @@ async function staleWhileRevalidate(event) {
  
 	  let body = await request.json(); 
  
-	  let id = CryptoJS.MD5(body.data.project.slug).toString() || CryptoJS.MD5(body.data.post.slug).toString() || CryptoJS.MD5(body.query).toString(); 
- 
+	  let slug =  body.data.project.slug || body.data.post.slug || body.query
+           let id = CryptoJS.MD5(slug).toString()
 	  data = await idbKeyval.get(id, store); 
  
 	  if (!data) return null; 
