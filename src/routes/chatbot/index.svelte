@@ -1,7 +1,7 @@
 <script>
 
 import { onMount } from 'svelte';
-	import { themeChange } from 'theme-change';
+	
 	
 let messages = []
 let newMessage
@@ -9,10 +9,14 @@ let prompt
 	onMount(async () => { })
 	
 const sendMessage = ()=> {
-messages = [...messages, {sender:'Mudia', message: newMessage}]
+messages = [...messages, {sender:'Mudia', message: newMessage, bg: 'text-gray-700', class: 'end'}]
 let promptMessage = messages.map(item => `${item.sender}: ${item.message} Bot:`).toString().replaceAll('Bot:,', ' ')
 let context = `${prompt} ${promptMessage}`
 alert(context)
+setTimeout(() => {
+messages = [...messages, {sender:'Bot', message: newMessage, bg: '', class: 'start'}]
+
+}, 3000)
 }
 
 
@@ -35,26 +39,15 @@ Personality: <textarea bind:value={prompt}></textarea>
             <div class="relative w-full p-6 overflow-y-auto h-[40rem]">
 
               <ul class="space-y-2">
-                <li class="flex justify-start">
-                  <div class="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
-                    <span class="block">Hi</span>
+                {#each messages as {sender, message, bg, class}}
+
+
+                <li class="flex justify-{class}">
+                  <div class="relative max-w-xl px-4 py-2 {bg} rounded shadow">
+                    <span class="block">{message} </span>
                   </div>
                 </li>
-                <li class="flex justify-end">
-                  <div class="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
-                    <span class="block">Hiiii</span>
-                  </div>
-                </li>
-                <li class="flex justify-end">
-                  <div class="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
-                    <span class="block">how are you?</span>
-                  </div>
-                </li>
-                <li class="flex justify-start">
-                  <div class="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
-                    <span class="block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. </span>
-                  </div>
-                </li>
+{/each}
               </ul>
 
             </div>
@@ -97,10 +90,6 @@ Personality: <textarea bind:value={prompt}></textarea>
           </div>
         </div>
       </div>
-{#each messages as {sender, message}}
-<span>{sender} : {message}</span> 
-
-{/each}
 
 </form>
-Index
+
