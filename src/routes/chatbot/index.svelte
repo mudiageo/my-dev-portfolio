@@ -5,7 +5,7 @@ import { onMount } from 'svelte';
 	
 let messages = []
 let newMessage
-$: let prompt = ''
+let prompt = ''
 	onMount(async () => { })
 	
 const sendMessage = ()=> {
@@ -20,7 +20,7 @@ alert(context)
 </script>
 
 <form on:submit|preventDefault={sendMessage}>
-Personality: <textarea>{prompt}</textarea>
+Personality: <textarea bind:innerHTML={prompt}></textarea>
 {#each messages as {sender, message}}
 <span>{sender} : {message}</span> 
 
