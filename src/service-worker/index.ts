@@ -19,11 +19,6 @@ store = new idbKeyval.Store('GraphQL-Cache', 'PostResponses');
 
 
 import { build, timestamp, files } from '$service-worker';
-const applicationCache = `applicationCache-v${timestamp}`;
-const staticCache = `staticCache-v${timestamp}`;
-const returnSSRpage = (path) =>
-  caches.open("ssrCache").then((cache) => cache.match(path));
-     console.log('installing service worker');
 
   
 
@@ -72,18 +67,14 @@ workbox.routing.registerRoute(
  */
   
 self.addEventListener('install', (event: ExtendableEvent): void => {
-   console.log('installing service worker');
-
    event.waitUntil(
-      Promise.all([
-      caches
-        .open("ssrCache")
-        .then((cache) => cache.addAll(["/", "/posts", "/projects", "/posts/offline"])),
-      caches.open(applicationCache).then((cache) => cache.addAll(build)),
-      caches.open(staticCache).then((cache) => cache.addAll(files)),
-    ])
-      .then(self.skipWaiting())
-   );
+		caches
+			.open(FILES)
+			.then((cache) => cache.addAll(to_cache))
+			.then(() => {
+				worker.skipWaiting();
+			})
+	);
 });
 
 self.addEventListener('fetch', async (event: FetchEvent): void => {
@@ -100,73 +91,67 @@ self.addEventListener('fetch', async (event: FetchEvent): void => {
 		// way to access IndexedDB of course.
 		event.respondWith(staleWhileRevalidate(event)); 
 			}
- 	else {
 
+else {
+if (event.request.method !== 'GET' || event.request.headers.has('range')) return;
 
- if (/(posts)/.test(requestURL.pathname)) {
-     const returnOfflinePosts = () => {
-       return fetch(event.request).catch(() => {
-         return caches
-           .open("postsCache")
-           .then((cache) => {
-             return cache.keys().then((cacheKeys) => {
-               return Promise.all(
-                 cacheKeys.map((cacheKey) => cache.match(cacheKey))
-               );
-             });
-           })
-           .then((cachesResponses) => {
-             return Promise.all(
-               cachesResponses.map((response) => response.json())
-             );
-           })
-           .then((posts) => {
-             const response = new Response(JSON.stringify(posts), {
-               statusText: "offline",
-             });
-             return response;
-           });
-       });
-     };
- event.respondWith(returnOfflinePosts());
-  } else if ( /(\/posts\/)(\w+-?)*/.test(requestURL.pathname) && !/(.css)|(.js)$/.test(requestURL.pathname)) {
-     const findOfflinePost = () =>
-       caches
-         .match(request)
-         .then((response) => (response ? response : fetch(request)))
-         .catch(() => returnSSRpage("/posts/offline"));
- event.respondWith(findOfflinePost());
-  } else
-  {
-     event.respondWith(caches.match(request).then((cacheRes) => cacheRes || fetch(request)));
- }
+	const url = new URL(event.request.url);
+
+	// don't try to handle e.g. data: URIs
+	const isHttp = url.protocol.startsWith('http');
+	const isDevServerRequest =
+		url.hostname === self.location.hostname && url.port !== self.location.port;
+	const isStaticAsset = url.host === self.location.host && staticAssets.has(url.pathname);
+	const skipBecauseUncached = event.request.cache === 'only-if-cached' && !isStaticAsset;
+
+	if (isHttp && !isDevServerRequest && !skipBecauseUncached) {
+		event.respondWith(
+			(async () => {
+				// always serve static files and bundler-generated assets from cache.
+				// if your application has other URLs with data that will never change,
+				// set this variable to true for them and they will only be fetched once.
+				const cachedAsset = isStaticAsset && (await caches.match(event.request));
+
+				return cachedAsset || fetchAndCache(event.request);
+			})()
+		);
+	}
 
 }
+ 	
 });
 
 // Removes old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    clients.claim(),
-    caches
-      .keys()
-      .then((keys) => {
-        return Promise.all(
-          keys
-            .filter(
-              (key) =>
-                key !== applicationCache &&
-                key !== staticCache &&
-                key !== "postsCache" &&
-                key !== "ssrCache"
-            )
-            .map((key) => caches.delete(key))
-        );
-      })
-      .then(self.skipWaiting())
-      .then(() => console.log("activated"))
-  );
+		caches.keys().then(async (keys) => {
+			// delete old caches
+			for (const key of keys) {
+				if (key !== FILES) await caches.delete(key);
+			}
+
+			worker.clients.claim();
+		})
+	);
 });
+/**
+ * Fetch the asset from the network and store it in the cache.
+ * Fall back to the cache if the user is offline.
+ */
+async function fetchAndCache(request: Request) {
+	const cache = await caches.open(`offline${timestamp}`);
+
+	try {
+		const response = await fetch(request);
+		cache.put(request, response.clone());
+		return response;
+	} catch (err) {
+		const response = await cache.match(request);
+		if (response) return response;
+
+		throw err;
+	}
+}
 
 async function staleWhileRevalidate(event) { 
 
