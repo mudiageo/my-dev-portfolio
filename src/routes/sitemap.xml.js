@@ -29,7 +29,9 @@ export const get = async () => {
 const sitemap = (
   posts,
   pages
-) => `<?xml version="1.0" encoding="UTF-8" ?>
+) => `
+<?xml version="1.0" encoding="UTF-8"?>
+
 <urlset
   xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:news="https://www.google.com/schemas/sitemap-news/0.9"
