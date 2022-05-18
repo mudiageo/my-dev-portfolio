@@ -1,4 +1,4 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow:
+Disallow: 
 Sitemap: https://mudia.ga/sitemap.xml
