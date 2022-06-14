@@ -58,7 +58,7 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
              Home
            </li>
            <li>
-            <a class:active={$page.url.pathname === '/'} sveltekit:prefetch href="/"
+            <a class:active={$page.url.pathname === ''} sveltekit:prefetch href="https://shop.mudia.ga"
              class="block text-sm px-2 py-4 transition duration-300">
             Services
           </a>
@@ -67,6 +67,12 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
             <a class:active={$page.url.pathname === '/projects'} sveltekit:prefetch href="/projects"
              class="block text-sm px-2 py-4 transition duration-300">
             Portfolio
+          </a>
+          </li>
+<li>
+            <a class:active={$page.url.pathname === '/'} sveltekit:prefetch href="https://ai.mudia.ga"
+             class="block text-sm px-2 py-4 transition duration-300">
+            My AI Projects
           </a>
           </li>
           <li>
