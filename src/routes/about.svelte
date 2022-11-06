@@ -41,4 +41,5 @@
   
   <article div class="prose prose-lg">
     {@html marked(bio)}
-  </article>
+I am a full stack developer. I have been in web development for about {} years now. My favourite technologies to work with include Sveltekit, Next.js, Tailwind CSS, etc. I have also had experience with PHP, Python, React, Three.js, etc. I have worked on several personal projects over the years. You can check out some of my projects on the projects page. I love learning about new technologies and 
+   improving my skills. My hobbies are football, cubing, gaming, reading interesting books, etc. </article>
