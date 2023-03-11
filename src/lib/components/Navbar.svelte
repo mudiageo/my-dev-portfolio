@@ -2,13 +2,9 @@
 	import { page } from '$app/stores';
   import {onMount} from 'svelte'
   import ThemeSelect from './ThemeSelect.svelte'
-  onMount(() => {
-  const menuBtn = document.querySelector('#menu-button');
-  const navMenu = document.querySelector('#menu');
-  $: menuBtn.addEventListener('click', () => {
-    navMenu.classList.toggle('hidden');
-  })
-})
+
+const menuBtn, navMenu
+
 </script>
 <nav class="flex flex-wrap
 items-center
@@ -30,7 +26,8 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
           </div>
           <svg
           xmlns="http://www.w3.org/2000/svg"
-          id="menu-button"
+          bind:this={menuBtn}
+on:click={()=> navMenu.classList.toggle('hidden')}
           class="h-6 w-6 cursor-pointer md:hidden block"
           fill="none"
           viewBox="0 0 24 24"
@@ -46,7 +43,8 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
      
 
   
-   <div class="hidden w-full md:flex md:items-center md:w-auto" id="menu">
+   <div class="hidden w-full md:flex md:items-center md:w-auto"
+id="menu" bind:this={navMenu} >
        <ul class=" pt-4
        text-base transition duration-500
        md:flex
@@ -58,7 +56,7 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
              Home
            </li>
            <li>
-            <a class:active={$page.url.pathname === ''} sveltekit:prefetch href="https://shop.mudia.ga"
+            <a class:active={$page.url.pathname === '/services'} sveltekit:prefetch href="/services"
              class="block text-sm px-2 py-4 transition duration-300">
             Services
           </a>
@@ -88,9 +86,9 @@ text-lg mb-16 shadow-lg bg-neutral text-neutral-content sticky top-0 z-10">
          </a>
            </li>
            <li>
-            <a class:active={$page.url.pathname === '/'} sveltekit:prefetch href="/"
+            <a class:active={$page.url.pathname === '/'} sveltekit:prefetch href="/#contact"
              class="block text-sm px-2 py-4 transition duration-300">
-           Contact Us
+           Contact Me
      </a></li>
      <li class="block text-sm px-2 py-4 transition duration-300">
       <ThemeSelect />
